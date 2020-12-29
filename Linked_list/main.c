@@ -1,5 +1,8 @@
 // Linked List Implementation
-// Read Comments for more details
+// This program contains function to add a node at the end of the list, to dequeue the last element from the list, insert a node at a particular position, delete an nth node 
+// and reverse the linked list. And of course, printing the output.
+
+// The main focus was implementing the linked list. The size (to print) increments even if the input is INVALID. But it can be fixed by adding some additional loops.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -53,30 +56,34 @@ node* head = NULL; // This is the head node. Initialize to zero when there are n
  // This function will insert a new node at a particular position.
  void insert_at_n(int val, int n){
 
-    node* temp = (node*)malloc(sizeof(node*));
+    node* temp = (node*)malloc(sizeof(node*)); // temporary node to traverse the list.
 
+    // If the node to be entered is at the first position
     if(n == 1){
-       temp->data = val;
-       temp->link = head;
-       head = temp;
+       temp->data = val; // Copy the value in the node.
+       temp->link = head; // Point to the previous head.
+       head = temp; // Make this new node the head node.
     }
     else{
+        // create two temporary nodes.
         node* temp1 = (node*)malloc(sizeof(node*));
         node* temp2 = (node*)malloc(sizeof(node*));
-        temp1 = head;
-        int i = 1;
+        temp1 = head; // head is also copied in the temp1
+        int i = 1; // counter
         while(1){
 
-            if(i == n){
-                temp->data = val;
-                temp->link = temp1;
-                temp2->link = temp;
+            if(i == n){ // if we have reached the position
+                temp->data = val; // Copy the value
+                temp->link = temp1; // Make link to the next node
+                temp2->link = temp; // Make link from previous node to new node
                 return;
             }
 
-            temp2 = temp1;
-            temp1 = temp1->link;
-            i++;
+            temp2 = temp1; // Store previous node
+            temp1 = temp1->link; // Go to the next node
+            i++; // Increment counter
+            // This case considers if the position entered is beyond the last node.
+            // In this case a node will added at the end.
             if(temp1->link == NULL){
                 temp->data = val;
                 temp->link = NULL;
@@ -87,6 +94,57 @@ node* head = NULL; // This is the head node. Initialize to zero when there are n
     }
  }
 
+// This function deals with deleting a node at a specific position.
+ void del_at_n(int pos){
+    // Create three temporary nodes to store nodes
+    node* temp = (node*)malloc(sizeof(node));
+    node* temp1 = (node*)malloc(sizeof(node));
+    node* temp2 = (node*)malloc(sizeof(node));
+
+    temp = head; // start with the head node
+
+    // If the head node is to be deleted.
+    if(pos == 1){
+        temp1 = temp; // copy the head node again
+        temp = temp->link; // go to the enxt node.
+        head = temp; // next node is the head node
+        free(temp1); // Free memory so that it can be used.
+        return;
+    }
+    // If not then iterate till pos-1
+    for(int i = 1; i<pos-1; i++){
+        temp = temp->link; // Find the node to be deleted
+
+    }
+    temp1 = temp; // Copy the node = C-Node
+    temp = temp->link; // Next node = node to be deleted
+    temp2 = temp; // Copy the node to be deleted = D-Node
+    temp = temp->link; // Node after the one to be deleted = V-Node
+    temp1->link = temp; // Join C- Node and V- Node.
+    free(temp2);// Free memory of D-Node.
+ }
+
+// To reverse a Linked List use this function.
+ void reverse(){
+    // Create three temporary nodes to store....
+    node* temp = (node*)malloc(sizeof(node)); // current node
+    node* temp1 = (node*)malloc(sizeof(node)); // next node
+    node* temp2 = (node*)malloc(sizeof(node)); // previous node
+
+    temp = head; // Start with the head node
+    temp1 = temp->link; // Copy the next node
+    temp->link = NULL; // Current head node will point to NULL. Since it is the last node.
+
+    while(temp1->link != NULL){ // Iterate till node that points to last node is found.
+    temp2 = temp; // Copy previous node.
+    temp = temp1;// Current node
+    temp1 = temp1->link; // Next node
+    temp->link = temp2; // Change link of previous node and current node
+    }
+    head = temp1; // New head is last node
+    head->link = temp; // New head node will point to the previous node.
+
+ }
 int main()
 {
     int size, val, pos; // Size will store size of the linked list, Val is the data in the list.
@@ -122,5 +180,21 @@ int main()
     else printf("No elements...\n");
     printf("Size Of the List after inserting at nth position is : ");
     printf("%d\n",size);
+
+    printf("What is the position of the element you wish to delete in the Linked List : \n");
+    scanf("%d", &pos);
+    del_at_n(pos);
+    size--;
+    printf("After Deleting the nth node, the Linked list is : \n");
+    if (size>0) Print(); // Print elements in the linked list.
+    else printf("No elements...\n");
+    printf("Size Of the List after deleting nth node is : ");
+    printf("%d\n",size);
+
+    reverse();
+    printf("After Reversing, the Linked list is : \n");
+    if (size>0) Print(); // Print elements in the linked list.
+    else printf("No elements...\n");
+
     return 0;
 }
